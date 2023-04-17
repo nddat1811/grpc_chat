@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const {printMessage} = require("./server/chatService")
+const {printMessage} = require("./server/chatservice")
 
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
@@ -75,6 +75,10 @@ const sendMsg = (call, callback) => {
   // check du like moi cho send all
   if(!isValidLastLike(chatObj.from) || userInRoom.length < MIN_USERS ){
     printMessage("message error", `${chatObj.msg} (from: ${chatObj.from})`)
+    sendNotificate(chatObj.from, {
+      code: 1,
+      msg: `you can't send next message`
+    })
     return callback(null, {});
   }
   let data= {
@@ -144,17 +148,17 @@ const likeToMessage = (call, callback) => {
       msg.likeList.push(user)
 
       // notificate to user send msg
-      if(isValidLastLike(msg.from)){
-        sendNotificate(msg.from, {
-          code: 0,
-          msg: "you can send message."
-        })
-      }
+      sendNotificate(msg.from, {
+        code: 0,
+        msg: `${user.name} like your msg uuid=${msg.uuid} (${msg.likeList.length} likes${
+          isValidLastLike(msg.from)? "- you can send next message." : ""})`
+      })
+
       callback(null, {
         code: 0,
         msg: "Success like",
       });
-      printMessage("like", `${user.name} like ${uuid}`);
+      printMessage("like", `${user.name} like msg uuid=${msg.uuid} (${msg.likeList.length} likes)`);
       break;
   }
   if(msgError != ""){
@@ -194,6 +198,11 @@ server.addService(protoDescriptor.ChatService.service, {
 
 server.bindAsync(SERVER_URI, grpc.ServerCredentials.createInsecure(), ()=>{
   server.start();
+  printMessage("server",`------Start server------`);
 });
+// printMessage("server",`waiting user, (current ${userInRoom.length})`);
 
-printMessage("server",`waiting user, (current ${userInRoom.length})`);
+// process.on('SIGINT', () => {
+//   printMessage("server",`server shut down`);
+//   server.close();
+// });
