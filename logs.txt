@@ -1,1 +1,17 @@
-(time: 4/17/2023, 5:49:02 PM)[server]: ------Start server------
+(time: 4/17/2023, 6:19:09 PM)[server]: ------Start server------
+(time: 4/17/2023, 6:19:19 PM)[login]: t1 joined
+(time: 4/17/2023, 6:19:21 PM)[login]: t2 joined
+(time: 4/17/2023, 6:19:23 PM)[login]: t3 joined
+(time: 4/17/2023, 6:19:23 PM)[server]: start chat, (current 3)
+(time: 4/17/2023, 6:19:25 PM)[logout]: t2 left
+(time: 4/17/2023, 6:19:25 PM)[server]: waiting user, (current 2)
+(time: 4/17/2023, 6:19:27 PM)[logout]: t1 left
+(time: 4/17/2023, 6:19:29 PM)[login]: t4 joined
+(time: 4/17/2023, 6:19:35 PM)[login]: t5 joined
+(time: 4/17/2023, 6:19:35 PM)[server]: start chat, (current 3)
+(time: 4/17/2023, 6:19:38 PM)[logout]: t3 left
+(time: 4/17/2023, 6:19:38 PM)[server]: waiting user, (current 2)
+(time: 4/18/2023, 10:07:29 PM)[server]: ------Start server------
+(time: 4/18/2023, 10:12:59 PM)[server]: ------Start server------
+(time: 4/18/2023, 10:15:13 PM)[server]: ------Start server------
+(time: 4/18/2023, 10:57:01 PM)[server]: ------Start server------

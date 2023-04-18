@@ -42,4 +42,3 @@ service ChatService {
     rpc outRoom(User) returns (Empty) {}
     rpc notificateUser(User) returns (stream Response) {}
 }
-

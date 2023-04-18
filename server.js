@@ -8,9 +8,6 @@ const SERVER_URI = "0.0.0.0:9090";
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 
-
-
-
 let userInRoom = [];
 let callListUser = [];
 let chats = [];

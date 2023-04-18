@@ -1,0 +1,23 @@
+(time: 4/17/2023, 5:49:02 PM)[server]: ------Start server------
+(time: 4/17/2023, 6:01:16 PM)[server]: ------Start server------
+(time: 4/17/2023, 6:05:45 PM)[login]: t1 joined
+(time: 4/17/2023, 6:05:53 PM)[login]: t2 joined
+(time: 4/17/2023, 6:06:00 PM)[login]: t3 joined
+(time: 4/17/2023, 6:06:00 PM)[server]: start chat, (current 3)
+(time: 4/17/2023, 6:06:07 PM)[login]: t4 joined
+(time: 4/17/2023, 6:06:17 PM)[login]: t5 joined
+(time: 4/17/2023, 6:09:36 PM)[message]:  so 1 hello moi nguoi (from: t1, uuid: 1)
+(time: 4/17/2023, 6:10:33 PM)[message]:  hello so 1 (from: t5, uuid: 2)
+(time: 4/17/2023, 6:10:53 PM)[message error]: hi 5 (from: t1)
+(time: 4/17/2023, 6:12:41 PM)[like error]: t5 like like 1 (message not found)
+(time: 4/17/2023, 6:12:52 PM)[like]: t5 like msg uuid=1 (1 likes)
+(time: 4/17/2023, 6:13:03 PM)[like]: t3 like msg uuid=1 (2 likes)
+(time: 4/17/2023, 6:14:28 PM)[message]:  toi co viec nen out truoc day bye moi nguoi (from: t1, uuid: 3)
+(time: 4/17/2023, 6:14:38 PM)[logout]: t1 left
+(time: 4/17/2023, 6:16:00 PM)[message]:   oh no (from: t4, uuid: 1)
+(time: 4/17/2023, 6:16:12 PM)[like]: t5 like msg uuid=1 (1 likes)
+(time: 4/17/2023, 6:16:28 PM)[message]:  haizz (from: t3, uuid: 2)
+(time: 4/17/2023, 6:16:33 PM)[like]: t5 like msg uuid=2 (1 likes)
+(time: 4/17/2023, 6:17:35 PM)[logout]: t3 left
+(time: 4/17/2023, 6:17:39 PM)[logout]: t2 left
+(time: 4/17/2023, 6:17:39 PM)[server]: waiting user, (current 2)

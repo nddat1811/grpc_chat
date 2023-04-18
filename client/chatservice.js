@@ -1,127 +1,138 @@
-class ChatService{
+class ChatService {
   constructor(client, readline) {
-    this.client = client
-    this.readline = readline
-    this.isBegin = false
+    this.client = client;
+    this.readline = readline;
+    this.isBegin = false;
   }
 
-  joinRoom(name){
+  joinRoom(name) {
     this.client.join(
-        {
-          name
-        },
-        (err, res) => {
-          if(err || res.code=='1') {
-            printMessage('error', err || res?.msg)
-            process.exit(0);
-          }
-          this.user = {name: name}
-          this.chatStream = this.client.receiveMsg({
-            name: name
-          });
-          this.chatStream.on("data", (data) => {
-            printMessage('message', `${data.msg} (from: ${data.from}, uuid: ${data.uuid})`)
-
-          });
-          this.chatStream.on("end", (response) => {
-            this.outRoom();
-          })
-          this.chatStream.on('error', (error) => {
-            printMessage("server", "server is down");
-            process.exit(0)
-          });
-
-          this.getAllUsersStream();
-          this.getNotificateStream();
+      {
+        name,
+      },
+      (err, res) => {
+        if (err || res.code == "1") {
+          printMessage("error", err || res?.msg);
+          process.exit(0);
         }
-      );
+        this.user = { name: name };
+        this.chatStream = this.client.receiveMsg({
+          name: name,
+        });
+        this.chatStream.on("data", (data) => {
+          printMessage(
+            "message",
+            `${data.msg} (from: ${data.from}, uuid: ${data.uuid})`
+          );
+        });
+        this.chatStream.on("end", (response) => {
+          this.outRoom();
+        });
+        this.chatStream.on("error", (error) => {
+          printMessage("server", "server is down");
+          process.exit(0);
+        });
+
+        this.getAllUsersStream();
+        this.getNotificateStream();
+      }
+    );
   }
   getNotificateStream() {
-    this.notificateStream = this.client.notificateUser(this.user, (err, res)=>{
-      if(err || res.code=='1') {
-        printMessage('error', err || res?.msg)
+    this.notificateStream = this.client.notificateUser(
+      this.user,
+      (err, res) => {
+        if (err || res.code == "1") {
+          printMessage("error", err || res?.msg);
+        }
       }
-    });
-    this.notificateStream.on("data", (res)=>{
-      printMessage(res.code=='1' ? 'error' :'info', res.msg)
+    );
+    this.notificateStream.on("data", (res) => {
+      printMessage(res.code == "1" ? "error" : "info", res.msg);
     });
     this.notificateStream.on("end", () => {
-      this.outRoom()
+      this.outRoom();
     });
-    this.notificateStream.on('error', (error) => {
+    this.notificateStream.on("error", (error) => {
       printMessage("server", "server is down");
-      process.exit(0)
+      process.exit(0);
     });
   }
 
   getAllUsersStream() {
-    this.userListStream = this.client.getAllUsers({}, (err, res)=>{
-      if(err || res.code=='1') {
-        printMessage('error', err || res?.msg)
+    this.userListStream = this.client.getAllUsers({}, (err, res) => {
+      if (err || res.code == "1") {
+        printMessage("error", err || res?.msg);
       }
     });
-    this.userListStream.on("data", (response)=>{
+    this.userListStream.on("data", (response) => {
       let usersList = response?.users || [];
-      if (usersList.length < 3){
+      let usersListStr = usersList
+        .filter((e) => e.name != this.user.name)
+        .map((e) => e.name)
+        .join(", ");
+      if (usersList.length < 3) {
         clearScreen();
         printGuide();
-        console.log(`Current user: ${this.user.name}`)
-        console.log(`----------Group just ${usersList.length} members----------`)
-        if(this.isBegin){
+        console.log(`Current user: ${this.user.name}, other:[${usersListStr}]`);
+        console.log(
+          `----------Group just ${usersList.length} members----------`
+        );
+        if (this.isBegin) {
           this.isBegin = false;
         }
-      }else{
-        if(!this.isBegin){
+      } else {
+        if (!this.isBegin) {
           clearScreen();
           printGuide();
-          console.log(`Current user: ${this.user.name}`)
-          console.log(`----------Wellcome to chat----------`)
+          console.log(
+            `Current user: ${this.user.name}, other:[${usersListStr}]`
+          );
+          console.log(`----------Wellcome to chat----------`);
           this.isBegin = true;
         }
       }
-      }
-    );
+    });
     this.userListStream.on("end", () => {
-      this.outRoom()
+      this.outRoom();
     });
-    this.userListStream.on('error', (error) => {
+    this.userListStream.on("error", (error) => {
       printMessage("server", "server is down");
-      process.exit(0)
+      process.exit(0);
     });
-
   }
 
-  sendMsg(text){
+  sendMsg(text) {
     // clear the current line
     const msg = {
       msg: text,
       from: this.user.name,
-      time: new Date().toLocaleString()
+      time: new Date().toLocaleString(),
     };
     this.client.sendMsg(msg, (err, res) => {
-      if(err || res.code=='1') {
-        printMessage('error', err || res?.msg)
+      if (err || res.code == "1") {
+        printMessage("error", err || res?.msg);
       }
     });
   }
 
-  likeMsg(uuid){
+  likeMsg(uuid) {
     let likeReq = {
-      user: this.user, uuid
-    }
+      user: this.user,
+      uuid,
+    };
 
-    this.client.likeToMessage(likeReq, (err, res)=>{
-      printMessage(res.code=='1' ? 'error' :'info',
-       `${res.msg}`)
-    })
+    this.client.likeToMessage(likeReq, (err, res) => {
+      printMessage(res.code == "1" ? "error" : "info", `${res.msg}`);
+    });
   }
 
-  outRoom(){
+  outRoom() {
     // this.chatStream.cancel();
     this.userListStream.cancel();
-    this.client.outRoom(this.user,(err, res)=>{
-      if(err || res.code=='1') {
-        printMessage('error', err || res?.msg)
+    this.client.outRoom(this.user, (err, res) => {
+      if (err || res.code == "1") {
+        printMessage("error", err || res?.msg);
       }
     });
     console.log(`good bye ${this.user.name}`);
@@ -129,29 +140,27 @@ class ChatService{
   }
 }
 
-function printMessage(label, message){
-  console.log(`[${label}]: ${message}`)
+function printMessage(label, message) {
+  console.log(`[${label}]: ${message}`);
 }
 
-const readline = require('readline');
-
+const readline = require("readline");
 
 function clearScreen() {
-  const blank = '\n'.repeat(process.stdout.rows);
+  const blank = "\n".repeat(process.stdout.rows);
   console.log(blank);
   readline.cursorTo(process.stdout, 0, 0);
   readline.clearScreenDown(process.stdout);
 }
 
 function printGuide() {
-  console.log("action <code>:<data>")
-  console.log("code 0: Out room.")
-  console.log("code 1: Send message.")
-  console.log("code 2: Like message.")
-
+  console.log("action <code>:<data>");
+  console.log("code 0: Out room.");
+  console.log("code 1: Send message.");
+  console.log("code 2: Like message.");
 }
 
 module.exports = {
-    ChatService,
-    printMessage
-}
+  ChatService,
+  printMessage,
+};
